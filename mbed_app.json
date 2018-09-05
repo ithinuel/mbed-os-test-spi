@@ -1,0 +1,34 @@
+{
+    "config": {
+        "MASTER_MOSI": "NC",
+        "MASTER_MISO": "NC",
+        "MASTER_MCLK": "NC",
+        "MASTER_SSEL": "NC",
+        "SLAVE_MOSI": "NC",
+        "SLAVE_MISO": "NC",
+        "SLAVE_MCLK": "NC",
+        "SLAVE_SSEL": "NC"
+    },
+    "target_overrides": {
+        "NUCLEO_F429ZI": {
+            "MASTER_MOSI": "PB_5",
+            "MASTER_MISO": "PA_6",
+            "MASTER_MCLK": "PA_5",
+            "MASTER_SSEL": "PA_4",
+            "SLAVE_MOSI": "PE_6",
+            "SLAVE_MISO": "PE_5",
+            "SLAVE_MCLK": "PE_2",
+            "SLAVE_SSEL": "PE_4"
+        },
+        "K66F": {
+            "MASTER_MOSI": "PTD13",
+            "MASTER_MISO": "PTB23",
+            "MASTER_MCLK": "PTD12",
+            "MASTER_SSEL": "PTE25",
+            "SLAVE_MOSI": "PTD3",
+            "SLAVE_MISO": "PTD2",
+            "SLAVE_MCLK": "PTD1",
+            "SLAVE_SSEL": "PTD0"
+        }
+    }
+}
