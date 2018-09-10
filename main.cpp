@@ -22,21 +22,22 @@ DigitalOut ssel(MBED_CONF_APP_MASTER_SSEL, 1);
 
 uint32_t fill = (uint32_t)'|';
 
-Semaphore start_sync(0, 1);
-
 void fn_slave() {
+#if 0
     for (uint32_t i = 0; i < sizeof(tx_slave); i++) {
-        start_sync.release();
         spi_transfer(&slave, &tx_slave[i], 1, &rx_slave[i], 1, &fill);
     }
+#else 
+    spi_transfer(&slave, tx_slave, sizeof(tx_slave), rx_slave, sizeof(tx_master), &fill);
+#endif
     join.release();
 }
 
 void fn_master() {
     ssel = 0;
     for (uint32_t i = 0; i < sizeof(tx_master); i++) {
-        start_sync.wait();
         spi_transfer(&master, &tx_master[i], 1, &rx_master[i], 1, &fill);
+        Thread::yield(); // release core time to let slave thread handle the reception & next transmition
     }
     ssel = 1;
     join.release();
