@@ -20,15 +20,15 @@ uint8_t rx_master[sizeof(tx_slave)+1] = {0};
 // gpio MBED_CONF_APP_MASTER_SSEL
 DigitalOut ssel(MBED_CONF_APP_MASTER_SSEL, 1);
 
-uint32_t fill = (uint32_t)'|';
+uint32_t fill_ = (uint32_t)'|';
 
 void fn_slave() {
 #if 0
     for (uint32_t i = 0; i < sizeof(tx_slave); i++) {
-        spi_transfer(&slave, &tx_slave[i], 1, &rx_slave[i], 1, &fill);
+        spi_transfer(&slave, &tx_slave[i], 1, &rx_slave[i], 1, &fill_);
     }
 #else 
-    spi_transfer(&slave, tx_slave, sizeof(tx_slave), rx_slave, sizeof(tx_master), &fill);
+    spi_transfer(&slave, tx_slave, sizeof(tx_slave), rx_slave, sizeof(tx_master), &fill_);
 #endif
     join.release();
 }
@@ -36,8 +36,8 @@ void fn_slave() {
 void fn_master() {
     ssel = 0;
     for (uint32_t i = 0; i < sizeof(tx_master); i++) {
-        spi_transfer(&master, &tx_master[i], 1, &rx_master[i], 1, &fill);
-        Thread::yield(); // release core time to let slave thread handle the reception & next transmition
+        spi_transfer(&master, &tx_master[i], 1, &rx_master[i], 1, &fill_);
+        ThisThread::yield(); // release core time to let slave thread handle the reception & next transmition
     }
     ssel = 1;
     join.release();
@@ -127,11 +127,11 @@ void test2() {
     memset(rx_slave, 0, sizeof(rx_slave));
     memset(rx_master, 0, sizeof(rx_master));
 
-    spi_transfer_async(&slave, tx_slave, sizeof(tx_slave), rx_slave, sizeof(rx_slave), &fill,
+    spi_transfer_async(&slave, tx_slave, sizeof(tx_slave), rx_slave, sizeof(rx_slave), &fill_,
             slave_handler, NULL, DMA_USAGE_OPPORTUNISTIC); // prepare listen
     
     ssel = 0;
-    spi_transfer_async(&master, tx_master, sizeof(tx_master), rx_master, sizeof(rx_master), &fill,
+    spi_transfer_async(&master, tx_master, sizeof(tx_master), rx_master, sizeof(rx_master), &fill_,
             master_handler, NULL, DMA_USAGE_OPPORTUNISTIC); // prepare send
 
     // wait on semphr
